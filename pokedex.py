@@ -16,8 +16,28 @@ def save_team(team, team_file):
     with team_file.open("w") as file:
         json.dump(team, file, indent=2)
 
+def print_stat_card(pokemon):
+    print(f"#{pokemon['id']:03d} {pokemon['name'].title()}")
+    type_names = []
+    
+    for entry in pokemon["types"]:
+        type_names.append(entry["type"]["name"].title())
+    
+    print("Type:", " / ".join(type_names))
+    stat_labels = {
+        "hp": "Base HP",
+        "attack": "Base Attack",
+        "speed": "Base Speed",
+        }
+    
+    for entry in pokemon["stats"]:
+        stat_name = entry["stat"]["name"]
+        if stat_name in stat_labels:
+            print(f"{stat_labels[stat_name]}: {entry['base_stat']}")
+
 while True:
-    name = input("Enter a Pokémon, 'team', 'remove', or 'q': ").strip().lower()
+    name = input("Enter a Pokémon, 'team', 'inspect', 'remove', or 'q': ").strip().lower()
+    inspecting = name == "inspect"
 
     if name == "q":
         raise SystemExit
@@ -29,7 +49,7 @@ while True:
             print("Your team is empty.")
         continue
 
-    if name == "remove":
+    if name in ("remove", "inspect"):
         if not team:
             print("Your team is empty.")
             continue
@@ -37,7 +57,7 @@ while True:
         for slot, member in enumerate(team, start=1):
             print(f"{slot}. {member}")
 
-        choice = input("Remove which slot? (Enter to cancel): ").strip()
+        choice = input(f"{name.capitalize()} which slot? (Enter to cancel): ").strip()
         if not choice:
             continue
 
@@ -46,10 +66,15 @@ while True:
             print(f"Choose a slot from 1 to {len(team)}.")
             continue
 
-        removed = team.pop(int(choice) - 1)
-        save_team(team, team_file)
-        print(f"Removed {removed}.")
-        continue
+        index = int(choice) - 1
+
+        if name == "remove":
+            removed = team.pop(index)
+            save_team(team, team_file)
+            print(f"Removed {removed}.")
+            continue
+
+        name = team[index].lower()
 
     url = f"https://pokeapi.co/api/v2/pokemon/{quote(name, safe='')}/"
     request = Request(url, headers={"User-Agent": "Wyatt-Pokedex/0.1"})
@@ -63,23 +88,9 @@ while True:
             continue
         raise
 
-    print(f"#{pokemon['id']:03d} {pokemon['name'].title()}")
-    type_names = []
-
-    for entry in pokemon["types"]:
-        type_names.append(entry["type"]["name"].title())
-
-    print("Type:", " / ".join(type_names))
-    stat_labels = {
-        "hp": "Base HP",
-        "attack": "Base Attack",
-        "speed": "Base Speed",
-    }
-
-    for entry in pokemon["stats"]:
-        stat_name = entry["stat"]["name"]
-        if stat_name in stat_labels:
-            print(f"{stat_labels[stat_name]}: {entry['base_stat']}")
+    print_stat_card(pokemon)
+    if inspecting:
+        continue
 
     answer = input("Add this Pokémon to your team? (y/n): ").strip().lower()
     
