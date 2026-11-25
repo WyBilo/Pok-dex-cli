@@ -73,11 +73,12 @@ function showPokemonCard(pokemon) {
     card.hidden = false;
 }
 
-form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    card.hidden = true;
+let latestLookup = 0;
 
-    const name = nameInput.value.trim().toLowerCase();
+async function lookupPokemon(name, inspecting = false) {
+    const lookupId = ++latestLookup;
+    card.hidden = true;
+    currentPokemon = null;
 
     if (!name) {
         statusText.textContent = "Enter a Pokémon name.";
@@ -85,9 +86,12 @@ form.addEventListener("submit", async (event) => {
     }
 
     statusText.textContent = `Looking up ${name}…`;
+
     try {
         const url = `https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(name)}/`;
         const response = await fetch(url);
+
+        if (lookupId !== latestLookup) return;
 
         if (response.status === 404) {
             statusText.textContent = `No Pokémon found for "${name}". Check the spelling and try again.`;
@@ -100,11 +104,22 @@ form.addEventListener("submit", async (event) => {
         }
 
         const pokemon = await response.json();
+        if (lookupId !== latestLookup) return;
+
         showPokemonCard(pokemon);
+        addButton.hidden = inspecting;
         statusText.textContent = "";
     } catch {
-        statusText.textContent = "Couldn’t reach PokéAPI. Try again.";
+        if (lookupId === latestLookup) {
+            statusText.textContent = "Couldn’t reach PokéAPI. Try again.";
+        }
     }
+}
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = nameInput.value.trim().toLowerCase();
+    lookupPokemon(name);
 });
 
 function saveTeam() {
@@ -131,9 +146,16 @@ function renderTeam() {
                 slot.append(image);
             }
 
-            const label = document.createElement("span");
-            label.textContent = member.name;
-            slot.append(label);
+            const inspectButton = document.createElement("button");
+            inspectButton.type = "button";
+            inspectButton.textContent = member.name;
+            inspectButton.setAttribute("aria-label", `Inspect ${member.name}`);
+
+            inspectButton.addEventListener("click", () => {
+                lookupPokemon(member.name.toLowerCase(), true);
+            });
+
+            slot.append(inspectButton);
             const removeButton = document.createElement("button");
             removeButton.type = "button";
             removeButton.textContent = "Remove";
