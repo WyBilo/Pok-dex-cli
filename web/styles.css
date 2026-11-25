@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: #e8edf0;
+    color: #17252b;
+    font-family: system-ui, sans-serif;
+}
+
+main {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: clamp(1rem, 4vw, 2rem);
+    background: #b82738;
+    color: white;
+    border: 3px solid #39262d;
+    border-radius: 1.5rem 1.5rem 3rem 1.5rem;
+    box-shadow: 0 6px 0 #732033;
+}
+
+h1 {
+    margin: 0 0 1.25rem;
+    font-size: 2rem;
+}
+
+form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+}
+
+label {
+    grid-column: 1 / -1;
+    font-weight: 600;
+}
+
+input,
+button {
+    padding: 0.7rem;
+    border: 2px solid #26343c;
+    border-radius: 0.5rem;
+    font: inherit;
+}
+
+input {
+    min-width: 0;
+}
+
+button {
+    background: #26343c;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #152229;
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid #ffe47a;
+    outline-offset: 2px;
+}
+
+#status:empty {
+    margin: 0;
+}
+
+#pokemon-card {
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    background: #e0efce;
+    color: #203b32;
+    border: 5px solid #293a40;
+    border-radius: 0.75rem;
+    text-align: center;
+}
+
+#card-name {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+#card-sprite {
+    width: 144px;
+    height: 144px;
+    image-rendering: pixelated;
+}
+
+#card-types {
+    margin: 0 0 1rem;
+    font-weight: 600;
+}
+
+#card-stats {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+}
+
+#card-stats li {
+    padding: 0.45rem 0;
+    border-top: 1px solid #a4baa4;
+}
