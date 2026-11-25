@@ -108,3 +108,48 @@ button:focus-visible {
     padding: 0.45rem 0;
     border-top: 1px solid #a4baa4;
 }
+
+#add-to-team {
+    margin-top: 1rem;
+}
+
+#add-to-team:disabled {
+    background: #52605c;
+    cursor: default;
+}
+
+#team-panel h2 {
+    margin: 1.25rem 0 0.6rem;
+    font-size: 1.15rem;
+}
+
+#team-slots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#team-slots li {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    min-height: 5.5rem;
+    padding: 0.35rem;
+    border: 2px solid #293a40;
+    border-radius: 0.6rem;
+    background: #e0efce;
+    color: #203b32;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+#team-slots img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+}
